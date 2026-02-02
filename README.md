@@ -1,4 +1,7 @@
 # adc_test
+
+![Noise full range](https://raw.githubusercontent.com/rupayan555/adc_test/main/Noise%20full%20range.png)
+
 ADC accuracy test
 Comparing ADC Performance: Arduino Mega vs ESP32 vs ADS1115
 A Practical, Data-Driven Evaluation Using Real Measurements
