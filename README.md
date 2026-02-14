@@ -1,6 +1,7 @@
-# ADC Test Report — Arduino Uno vs ESP32 vs ADS1115
+# ADC Linearity & Noise Test — Arduino Uno vs ESP32 vs ADS1115
 
-This repository contains the complete **hardware setup, source codes, logged data, Excel analysis, and plots** for my practical ADC performance test project.
+This repository contains the complete **hardware setup, source codes, logged data, Excel analysis, and plots** for my practical ADC performance evaluation project, focusing on **linearity and noise testing**.
+
 
 📌 **Full detailed report (Blog version):**  
 ➡️ https://rupayanhalder.wordpress.com/65-2/
@@ -26,26 +27,11 @@ This repository contains the complete **hardware setup, source codes, logged dat
 
 ## 1. Project Goal & Tested ADC Devices
 
-The goal of this project is to evaluate the **real-world ADC performance** of commonly used embedded ADCs.  
-This test focuses on practical parameters like **linearity, noise, stability, and voltage conversion accuracy**.
+The goal of this project is to evaluate **real-world ADC performance**, mainly focusing on **linearity and noise**, for three popular ADC sources:
 
-This project compares three ADC sources:
-
-### 🔹 Arduino Uno (Internal ADC)
-- Resolution: **10-bit**
-- ADC range: **0–5V**
-- Output: **0–1023**
-- Commonly used in beginner and hobby embedded projects.
-
-### 🔹 ESP32 (Internal ADC)
-- Resolution: **12-bit (0–4095)**
-- Known issue: **non-linear behavior**
-- Requires calibration for accurate results in real applications.
-
-### 🔹 ADS1115 (External ADC)
-- Resolution: **16-bit**
-- High precision external ADC (I²C)
-- Excellent stability and noise performance compared to internal MCU ADCs.
+- **Arduino Uno** — Internal **10-bit** ADC (0–1023)
+- **ESP32** — Internal **12-bit** ADC (0–4095)
+- **ADS1115** — External **16-bit** I²C ADC
 
 ---
 
@@ -82,97 +68,48 @@ Two main experiments were performed:
 
 ## 4. Source Codes
 
-All source codes are available inside the folder below.  
-Each code is kept separate to make reproduction and debugging easier.
+All source codes are available in 📍 `2_codes/`.
 
-📍 `2_codes/`
-
----
-
-### ✅ Arduino Uno Code
-📌 Path:  
-`2_codes/adc_test_arduino_uno/adc_test_arduino_uno.ino`
-
-🔗 Direct link:  
-https://github.com/rupayan555/adc_test/blob/main/2_codes/adc_test_arduino_uno/adc_test_arduino_uno.ino
-
----
-
-### ✅ ESP32 Code
-📌 Path:  
-`2_codes/adc_test_esp32/adc_test_esp32.ino`
-
-🔗 Direct link:  
-https://github.com/rupayan555/adc_test/blob/main/2_codes/adc_test_esp32/adc_test_esp32.ino
-
----
-
-### ✅ Python Logger Script
-The Python script collects serial values and saves them into CSV format.  
-This makes analysis repeatable and also allows logging large sample sets easily.
-
-📌 Path:  
-`2_codes/python/adc_test_N_samples.py`
-
-🔗 Direct link:  
-https://github.com/rupayan555/adc_test/blob/main/2_codes/python/adc_test_N_samples.py
+- **Arduino Uno**: [`adc_test_arduino_uno.ino`](https://github.com/rupayan555/adc_test/blob/main/2_codes/adc_test_arduino_uno/adc_test_arduino_uno.ino)  
+- **ESP32**: [`adc_test_esp32.ino`](https://github.com/rupayan555/adc_test/blob/main/2_codes/adc_test_esp32/adc_test_esp32.ino)  
+- **Python Logger**: [`adc_test_N_samples.py`](https://github.com/rupayan555/adc_test/blob/main/2_codes/python/adc_test_N_samples.py)  
 
 ---
 
 ## 5. Logged Data Files
 
-All raw CSV logs and Excel analysis sheets are included.  
-This allows anyone to verify the results and reproduce the plots.
+All raw logs and analysis files are included in 📍 `3_data_collection_and_analysis/` for full verification and plot reproduction.
 
-📍 `3_data_collection_and_analysis/`
+- **CSV logs**: [`data_collection_csv/`](https://github.com/rupayan555/adc_test/tree/main/3_data_collection_and_analysis/data_collection_csv)  
+  - `adc_1000_samples_5_points_noise.csv`  
+  - `adc_log_100_samples_88_points_linearity.csv`
 
----
+- **Excel analysis**: [`data_analysis_excel/`](https://github.com/rupayan555/adc_test/tree/main/3_data_collection_and_analysis/data_analysis_excel)  
+  - `adc_log_1000_5_noise_analysis.xlsx`  
+  - `adc_log_100_88_linearity_analysis.xlsx`
 
-### 🔹 CSV Files (Raw Logs)
-📍 Folder:  
-`3_data_collection_and_analysis/data_collection_csv/`
-
-Files:
-- `adc_1000_samples_5_points_noise.csv`
-- `adc_log_100_samples_88_points_linearity.csv`
-
-🔗 Folder link:  
-https://github.com/rupayan555/adc_test/tree/main/3_data_collection_and_analysis/data_collection_csv
-
----
-
-### 🔹 Excel Analysis Files
-📍 Folder:  
-`3_data_collection_and_analysis/data_analysis_excel/`
-
-Files:
-- `adc_log_1000_5_noise_analysis.xlsx`
-- `adc_log_100_88_linearity_analysis.xlsx`
-
-🔗 Folder link:  
-https://github.com/rupayan555/adc_test/tree/main/3_data_collection_and_analysis/data_analysis_excel
 
 ---
 
 ## 6. Linearity Results
 
-Linearity plots show how closely the ADC output follows an ideal straight line.  
-This is one of the most important parameters for accurate voltage measurement.
+Linearity plots show how closely each ADC follows the ideal voltage-to-code relationship.
 
-📍 Plot folder:  
-`4_Plots/linearity_plots/`
-
----
+📍 Folder: `4_Plots/linearity_plots/`
 
 ### 🔹 Linearity Comparison
-This plot compares linearity across Arduino Uno, ESP32, and ADS1115.
+
+After plotting the results, **Arduino Uno and ADS1115 appear almost perfectly linear** across the full range.  
+However, the **ESP32 ADC is clearly non-linear** over the full range. It shows relatively better linearity only within **~0.15V to 2.5V**, but with an offset.  
+Also, ESP32 shows a **dead zone below ~0.13V** and it **tops out around ~3.18V**.
 
 ![Linearity Comparison](https://raw.githubusercontent.com/rupayan555/adc_test/main/4_Plots/linearity_plots/linearity_comparison.png)
 
 ---
+### 🔹 ESP32 Linearity Correction (2-Point Calibration)
 
-### 🔹 ESP32 Linearity Correction
-This plot shows how ESP32 ADC improves after correction/calibration.
+The ESP32 ADC data was calibrated using a practical **2-point calibration** method based on **0.501V** and **2.000V**.  
+This approach is simple and realistic for real-world projects. After calibration, the ESP32 result improves significantly, and in my opinion it becomes usable within the range of **~0.15V to 2.5V**.
 
 ![ESP32 Linearity Correction](https://raw.githubusercontent.com/rupayan555/adc_test/main/4_Plots/linearity_plots/esp32_linearity_correction.png)
 
